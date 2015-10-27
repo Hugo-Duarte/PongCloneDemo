@@ -11,7 +11,9 @@ namespace PongCloneDemo
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Texture2D paddle;
+
+        private Paddle paddle;
+        //private Texture2D paddle;
 
         public Game1()
         {
@@ -44,7 +46,8 @@ namespace PongCloneDemo
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            paddle = Content.Load<Texture2D>("Paddle");
+            //paddle = Content.Load<Texture2D>("Paddle");
+            paddle = new Paddle(Content.Load<Texture2D>("Paddle"), Vector2.Zero);
         }
 
         /// <summary>
@@ -81,7 +84,8 @@ namespace PongCloneDemo
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.Draw(paddle, Vector2.Zero, Color.White);
+            paddle.Draw(spriteBatch);
+            //spriteBatch.Draw(paddle, Vector2.Zero, Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
