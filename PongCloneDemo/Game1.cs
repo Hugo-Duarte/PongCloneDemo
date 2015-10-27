@@ -12,9 +12,11 @@ namespace PongCloneDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Paddle paddle;
+        private GameObjects gameObjects;
+        private Paddle playerPaddle;
+        private Paddle computerPaddle;
         private Ball ball;
-        //private Texture2D paddle;
+        //private Texture2D playerPaddle;
 
         public Game1()
         {
@@ -47,10 +49,20 @@ namespace PongCloneDemo
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            //paddle = Content.Load<Texture2D>("Paddle");
-            paddle = new Paddle(Content.Load<Texture2D>("Paddle"), Vector2.Zero, new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height));
-            ball = new Ball(Content.Load<Texture2D>("Ball"), Vector2.Zero);
-            ball.AttachTo(paddle);
+            //playerPaddle = Content.Load<Texture2D>("Paddle");
+
+            var gameBoundaries = new Rectangle(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
+            var paddleTexture = Content.Load<Texture2D>("Paddle");
+
+            playerPaddle = new Paddle(paddleTexture, Vector2.Zero, gameBoundaries, PlayerTypes.Human);
+
+            var computerPaddleLocation = new Vector2(Window.ClientBounds.Width - paddleTexture.Width, 0);
+            computerPaddle = new Paddle(paddleTexture, computerPaddleLocation, gameBoundaries, PlayerTypes.Computer);
+
+            ball = new Ball(Content.Load<Texture2D>("Ball"), Vector2.Zero, gameBoundaries);
+            ball.AttachTo(playerPaddle);
+
+            gameObjects = new GameObjects {PlayerPaddle = playerPaddle, ComputerPaddle = computerPaddle, Ball = ball};
         }
 
         /// <summary>
@@ -73,8 +85,9 @@ namespace PongCloneDemo
                 Exit();
 
             // TODO: Add your update logic here
-            paddle.Update(gameTime);
-            ball.Update(gameTime);
+            playerPaddle.Update(gameTime, gameObjects);
+            computerPaddle.Update(gameTime, gameObjects);
+            ball.Update(gameTime, gameObjects);
 
             base.Update(gameTime);
         }
@@ -89,9 +102,10 @@ namespace PongCloneDemo
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            paddle.Draw(spriteBatch);
+            playerPaddle.Draw(spriteBatch);
+            computerPaddle.Draw(spriteBatch);
             ball.Draw(spriteBatch);
-            //spriteBatch.Draw(paddle, Vector2.Zero, Color.White);
+            //spriteBatch.Draw(playerPaddle, Vector2.Zero, Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);

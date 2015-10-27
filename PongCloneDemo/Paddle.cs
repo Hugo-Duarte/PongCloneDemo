@@ -5,68 +5,48 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PongCloneDemo
 {
+
+    public enum PlayerTypes
+    {
+        Human,
+        Computer
+    }
+
     public class Paddle : Sprite
     {
-        private Rectangle screenBounds;
+        private readonly PlayerTypes playerType;
 
-        public Paddle(Texture2D texture, Vector2 location, Rectangle screenBounds) : base(texture, location)
+        public Paddle(Texture2D texture, Vector2 location, Rectangle screenBounds, PlayerTypes playerType) : base(texture, location, screenBounds)
         {
-            this.screenBounds = screenBounds;
+            this.playerType = playerType;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, GameObjects gameObjects)
         {
-            // move paddle up
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                velocity = new Vector2(0, -2.5f);
+            if (playerType == PlayerTypes.Computer)
+            {
+                if(gameObjects.Ball.Location.Y + gameObjects.Ball.Height < Location.Y)
+                    Velocity = new Vector2(0, -3.5f);
+                if (gameObjects.Ball.Location.Y  > Location.Y + Height)
+                    Velocity = new Vector2(0, 3.5f);
+            }
 
-            // move paddle down
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                velocity = new Vector2(0, 2.5f);
+            if (playerType == PlayerTypes.Human)
+            {
+                // move paddle up
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                    Velocity = new Vector2(0, -3.5f);
 
-            base.Update(gameTime);
+                // move paddle down
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                    Velocity = new Vector2(0, 3.5f);
+            }
+            base.Update(gameTime, gameObjects);
         }
 
         protected override void checkBounds()
         {
-            Location.Y = MathHelper.Clamp(Location.Y, 0, screenBounds.Height - texture.Height);
+            Location.Y = MathHelper.Clamp(Location.Y, 0, gameBoundaries.Height - texture.Height);
         }
-    }
-
-    public abstract class Sprite
-    {
-        protected Texture2D texture;
-        public Vector2 Location;
-        public int Width
-        {
-            get { return texture.Width; }
-        }
-
-        public int Height
-        {
-            get { return texture.Height; }
-        }
-
-        protected Vector2 velocity = Vector2.Zero;
-
-        public Sprite(Texture2D texture, Vector2 location)
-        {
-            this.texture = texture;
-            Location = location;
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture, Location, Color.White);
-        }
-
-        public virtual void Update(GameTime gameTime)
-        {
-            Location = Location + velocity;
-
-            checkBounds();
-        }
-
-        protected abstract void checkBounds();
     }
 }
