@@ -16,6 +16,7 @@ namespace PongCloneDemo
         private Paddle playerPaddle;
         private Paddle computerPaddle;
         private Ball ball;
+        private Score score;
         //private Texture2D playerPaddle;
 
         public Game1()
@@ -62,7 +63,9 @@ namespace PongCloneDemo
             ball = new Ball(Content.Load<Texture2D>("Ball"), Vector2.Zero, gameBoundaries);
             ball.AttachTo(playerPaddle);
 
-            gameObjects = new GameObjects {PlayerPaddle = playerPaddle, ComputerPaddle = computerPaddle, Ball = ball};
+            score = new Score(Content.Load<SpriteFont>("GameFont"), gameBoundaries);
+
+            gameObjects = new GameObjects {PlayerPaddle = playerPaddle, ComputerPaddle = computerPaddle, Ball = ball, Score = score };
         }
 
         /// <summary>
@@ -88,6 +91,7 @@ namespace PongCloneDemo
             playerPaddle.Update(gameTime, gameObjects);
             computerPaddle.Update(gameTime, gameObjects);
             ball.Update(gameTime, gameObjects);
+            score.Update(gameTime, gameObjects);
 
             base.Update(gameTime);
         }
@@ -105,6 +109,8 @@ namespace PongCloneDemo
             playerPaddle.Draw(spriteBatch);
             computerPaddle.Draw(spriteBatch);
             ball.Draw(spriteBatch);
+            score.Draw(spriteBatch);
+            
             //spriteBatch.Draw(playerPaddle, Vector2.Zero, Color.White);
             spriteBatch.End();
 

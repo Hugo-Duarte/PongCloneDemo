@@ -27,7 +27,7 @@ namespace PongCloneDemo
         {
             if(Keyboard.GetState().IsKeyDown(Keys.Space) && attachedToPaddle != null)
             {
-                var newVelocity = new Vector2(3.5f, attachedToPaddle.Velocity.Y * 0.65f);
+                var newVelocity = new Vector2(5.0f, attachedToPaddle.Velocity.Y * 0.65f);
                 Velocity = newVelocity;
                 attachedToPaddle = null;
             }

@@ -25,9 +25,12 @@ namespace PongCloneDemo
         {
             if (playerType == PlayerTypes.Computer)
             {
-                if(gameObjects.Ball.Location.Y + gameObjects.Ball.Height < Location.Y)
+                var random = new Random();
+                var reactionTreshold = random.Next(30, 130);
+
+                if(gameObjects.Ball.Location.Y + gameObjects.Ball.Height < Location.Y + reactionTreshold)
                     Velocity = new Vector2(0, -3.5f);
-                if (gameObjects.Ball.Location.Y  > Location.Y + Height)
+                if (gameObjects.Ball.Location.Y  > Location.Y + Height + reactionTreshold)
                     Velocity = new Vector2(0, 3.5f);
             }
 
